@@ -14,7 +14,7 @@ import static pl.kat.ue.tspgenetic.utils.DataSetReader.loadMatrix;
 
 class DataSetReaderTest {
 
-    private final static String path = "src/main/resources/test-data-reader.txt";
+    private final static String path = "src/test/data-reader-test.txt";
 
     @BeforeAll
     static void initFile() throws IOException {
