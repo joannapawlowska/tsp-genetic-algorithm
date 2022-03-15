@@ -1,14 +1,12 @@
 package pl.kat.ue.tspgenetic.utils;
 
 import java.util.NavigableMap;
-import java.util.Random;
 import java.util.TreeMap;
 
 public class WeightedCollection<T> {
 
     private final NavigableMap<Double, T> map = new TreeMap<>();
-    private static final Random random = new Random();
-    private double weightsSum;
+    private double weightsSum = 0;
 
     public void add(double weight, T object) {
         if (weight > 0) {
@@ -18,7 +16,7 @@ public class WeightedCollection<T> {
     }
 
     public T next() {
-        double value = random.nextDouble() * weightsSum;
+        double value = Random.nextDouble() * weightsSum;
         return map.ceilingEntry(value).getValue();
     }
 }

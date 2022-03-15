@@ -21,20 +21,17 @@ public class RouletteWheelSelection implements Selection {
 
     private void fillCollectionWithWeightedIndividuals(Population population) {
         weightedIndividuals = new WeightedCollection<>();
-        AssessmentMetadata metadata = getAssessmentMetadata(population);
+        int max = getAssessmentMax(population);
         population.forEach(individual -> {
-            double probability = (double) (metadata.max + 1 - individual.getAssessment()) / metadata.sum;
-            weightedIndividuals.add(probability, individual);
+            double weight = max + 1.0 - individual.getAssessment();
+            weightedIndividuals.add(weight, individual);
         });
     }
 
-    private AssessmentMetadata getAssessmentMetadata(Population population) {
-        AssessmentMetadata metadata = new AssessmentMetadata();
-        metadata.max = population.stream()
+    private int getAssessmentMax(Population population) {
+        return population.stream()
                 .mapToInt(Individual::getAssessment)
-                .peek(metadata::add)
                 .max().orElse(0);
-        return metadata;
     }
 
     private Population randomlySelectIndividuals() {
@@ -42,14 +39,5 @@ public class RouletteWheelSelection implements Selection {
                 .limit(selectionSize)
                 .map(Individual::copy)
                 .collect(Collectors.toCollection(Population::new));
-    }
-
-    private class AssessmentMetadata {
-        private int max;
-        private int sum = 0;
-
-        private void add(int assessment) {
-            sum += assessment;
-        }
     }
 }

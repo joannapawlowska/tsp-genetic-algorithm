@@ -3,8 +3,8 @@ package pl.kat.ue.tspgenetic.operators.selection;
 import lombok.AllArgsConstructor;
 import pl.kat.ue.tspgenetic.Individual;
 import pl.kat.ue.tspgenetic.Population;
+import pl.kat.ue.tspgenetic.utils.Random;
 
-import java.util.Random;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -14,7 +14,6 @@ import static java.util.stream.Collectors.toCollection;
 public class TournamentSelection implements Selection {
 
     private int selectivePressure;
-    protected static final Random random = new Random();
 
     @Override
     public Population select(Population population) {
@@ -24,7 +23,7 @@ public class TournamentSelection implements Selection {
     }
 
     private Individual performTournament(Population population) {
-        return IntStream.generate(() -> random.nextInt(population.size()))
+        return IntStream.generate(() -> Random.nextInt(population.size()))
                 .limit(selectivePressure)
                 .mapToObj(population::get)
                 .sorted()

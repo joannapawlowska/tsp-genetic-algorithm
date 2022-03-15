@@ -1,6 +1,5 @@
 package pl.kat.ue.tspgenetic;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +7,7 @@ import pl.kat.ue.tspgenetic.utils.Arrays;
 
 @Getter
 @Setter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class Individual implements Comparable<Individual> {
 
     private int assessment;
