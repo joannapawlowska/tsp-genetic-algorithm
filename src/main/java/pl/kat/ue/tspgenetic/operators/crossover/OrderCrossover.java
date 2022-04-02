@@ -15,6 +15,10 @@ public class OrderCrossover extends Crossover {
         super(crossoverProbability);
     }
 
+    public OrderCrossover(double crossoverProbability, int noCrossingEpoch) {
+        super(crossoverProbability, noCrossingEpoch);
+    }
+
     @Override
     public Pair<Individual> crossPair(Pair<Individual> pair) {
         setCurrentPairData(pair);

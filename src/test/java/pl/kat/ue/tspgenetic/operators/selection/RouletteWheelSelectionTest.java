@@ -40,7 +40,7 @@ class RouletteWheelSelectionTest {
             assertEquals(1, i3WeightCaptor.getValue());
             assertEquals(2, i2WeightCaptor.getValue());
             assertNotEquals(population, actual);
-            assertEquals(2, actual.size());
+            assertEquals(population.size(), actual.size());
             assertEquals(i3.getAssessment(), actual.get(0).getAssessment());
             assertEquals(i2.getAssessment(), actual.get(1).getAssessment());
         }

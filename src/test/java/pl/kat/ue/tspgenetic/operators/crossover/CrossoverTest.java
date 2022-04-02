@@ -35,7 +35,7 @@ class CrossoverTest {
             //WHEN
             mocked.when(() -> Random.nextDistinctInts(2, 3)).thenReturn(Arrays.asList(1, 2));
             mocked.when(Random::nextDouble).thenReturn(0.3);
-            crossover.cross(population);
+            crossover.cross(population, 1);
 
             //THEN
             Assertions.assertArrayEquals(new int[]{1, 2, 0}, population.get(0).getGenotype());

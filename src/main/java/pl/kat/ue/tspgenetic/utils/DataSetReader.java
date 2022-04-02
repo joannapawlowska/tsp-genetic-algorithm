@@ -15,7 +15,7 @@ public class DataSetReader {
             return createSymmetricSquareMatrix(numberOfRows, reader);
 
         } catch (IOException e) {
-            throw new InvalidFileFormatException(e.getLocalizedMessage());
+            throw new InvalidFileFormatException(e.getMessage());
         }
     }
 
@@ -35,7 +35,7 @@ public class DataSetReader {
 
     private static void fillOutMatrix(BufferedReader reader, int[][] matrix) throws IOException {
         for (int i = 0; i < matrix.length; i++) {
-            String[] row = reader.readLine().split(" ");
+            String[] row = reader.readLine().trim().split(" ");
             fillOutRowAndSymmetricallyColumn(matrix, row);
         }
     }

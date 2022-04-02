@@ -14,7 +14,7 @@ public class RouletteWheelSelection implements Selection {
 
     @Override
     public Population select(Population population) {
-        selectionSize = population.size() / 2;
+        selectionSize = population.size();
         fillCollectionWithWeightedIndividuals(population);
         return randomlySelectIndividuals();
     }

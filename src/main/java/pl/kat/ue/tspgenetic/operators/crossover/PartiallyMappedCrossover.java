@@ -15,6 +15,10 @@ public class PartiallyMappedCrossover extends Crossover {
         super(crossoverProbability);
     }
 
+    public PartiallyMappedCrossover(double crossoverProbability, int noCrossingEpoch) {
+        super(crossoverProbability, noCrossingEpoch);
+    }
+
     @Override
     public Pair<Individual> crossPair(Pair<Individual> pair) {
         setCurrentPairData(pair);

@@ -13,6 +13,7 @@ public class TworsMutation extends Mutation {
     @Override
     protected void mutateIndividual(Individual individual) {
         int[] genotype = individual.getGenotype();
+        individual.setAssessment(null);
         List<Integer> swapPoints = getSwapPoints(genotype.length);
         swapGenes(genotype, swapPoints.get(0), swapPoints.get(1));
     }
