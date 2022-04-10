@@ -8,12 +8,12 @@ import pl.kat.ue.tspgenetic.utils.Random;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class ReverseSequenceMutationTest {
 
     @Test
-    void shouldMutateIndividual() {
+    void shouldMutateWhenBothCutPointsAreInsideGenotype() {
         //GIVEN
         Individual individual = new Individual(1, new int[]{7, 4, 3, 1, 0, 2, 5, 6});
 
@@ -25,9 +25,55 @@ class ReverseSequenceMutationTest {
         }
 
         //THEN
-        assertEquals(2, individual.getGenotype()[2]);
-        assertEquals(0, individual.getGenotype()[3]);
-        assertEquals(1, individual.getGenotype()[4]);
-        assertEquals(3, individual.getGenotype()[5]);
+        assertArrayEquals(new int[]{7, 4, 2, 0, 1, 3, 5, 6}, individual.getGenotype());
+
+    }
+
+    @Test
+    void shouldMutateIndividualWhenLeftCutPointIsExtremeLeftAndRightCutPointIsInsideGenotype() {
+        //GIVEN
+        Individual individual = new Individual(1, new int[]{7, 4, 3, 1, 0, 2, 5, 6});
+
+        //WHEN
+        try (MockedStatic<Random> mocked = Mockito.mockStatic(Random.class)) {
+            mocked.when(() -> Random.nextDistinctInts(2, 8))
+                    .thenReturn(Arrays.asList(0, 4));
+            new ReverseSequenceMutation(0.05).mutateIndividual(individual);
+        }
+
+        //THEN
+        assertArrayEquals(new int[]{0, 1, 3, 4, 7, 2, 5, 6}, individual.getGenotype());
+    }
+
+    @Test
+    void shouldMutateWhenLeftCutPointIsInsideGenotypeAndRightCutPointIsExtremeRight() {
+        //GIVEN
+        Individual individual = new Individual(1, new int[]{7, 4, 3, 1, 0, 2, 5, 6});
+
+        //WHEN
+        try (MockedStatic<Random> mocked = Mockito.mockStatic(Random.class)) {
+            mocked.when(() -> Random.nextDistinctInts(2, 8))
+                    .thenReturn(Arrays.asList(2, 7));
+            new ReverseSequenceMutation(0.05).mutateIndividual(individual);
+        }
+
+        //THEN
+        assertArrayEquals(new int[]{7, 4, 6, 5, 2, 0, 1, 3}, individual.getGenotype());
+    }
+
+    @Test
+    void shouldMutateWhenCutPointsAreExtremeInGenotype() {
+        //GIVEN
+        Individual individual = new Individual(1, new int[]{7, 4, 3, 1, 0, 2, 5, 6});
+
+        //WHEN
+        try (MockedStatic<Random> mocked = Mockito.mockStatic(Random.class)) {
+            mocked.when(() -> Random.nextDistinctInts(2, 8))
+                    .thenReturn(Arrays.asList(0, 7));
+            new ReverseSequenceMutation(0.05).mutateIndividual(individual);
+        }
+
+        //THEN
+        assertArrayEquals(new int[]{6, 5, 2, 0, 1, 3, 4, 7}, individual.getGenotype());
     }
 }

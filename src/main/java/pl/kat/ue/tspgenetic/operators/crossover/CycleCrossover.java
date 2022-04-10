@@ -50,15 +50,15 @@ public class CycleCrossover extends Crossover {
 
     private void findCycle() {
         int index = 0;
-        int element;
+        int gene;
         do {
-            cycle.add(genotype1[index]);
-            element = genotype2[index];
-            index = findIndexInFirstGenotype(element);
-        } while (element != cycle.get(0));
+            cycle.add(index);
+            gene = genotype2[index];
+            index = findIndexOfGeneInFirstGenotype(gene);
+        } while (gene != genotype1[cycle.get(0)]);
     }
 
-    private int findIndexInFirstGenotype(int geneCandidate) {
+    private int findIndexOfGeneInFirstGenotype(int geneCandidate) {
         return Arrays.contains(0, genotypeLength - 1, genotype1, geneCandidate);
     }
 }
