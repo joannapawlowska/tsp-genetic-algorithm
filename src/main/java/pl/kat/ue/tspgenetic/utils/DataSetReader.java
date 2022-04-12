@@ -1,7 +1,5 @@
 package pl.kat.ue.tspgenetic.utils;
 
-import pl.kat.ue.tspgenetic.exceptions.InvalidFileFormatException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,7 +13,7 @@ public class DataSetReader {
             return createSymmetricSquareMatrix(numberOfRows, reader);
 
         } catch (IOException e) {
-            throw new InvalidFileFormatException(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

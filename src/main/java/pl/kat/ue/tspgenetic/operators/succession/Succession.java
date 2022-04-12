@@ -2,11 +2,12 @@ package pl.kat.ue.tspgenetic.operators.succession;//package pl.kat.ue.tspgenetic
 
 import pl.kat.ue.tspgenetic.Individual;
 import pl.kat.ue.tspgenetic.Population;
+import pl.kat.ue.tspgenetic.operators.GeneticOperator;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class Succession {
+public abstract class Succession implements GeneticOperator {
 
     public abstract void determineNext(Population population, Population evolutingPopulation);
 

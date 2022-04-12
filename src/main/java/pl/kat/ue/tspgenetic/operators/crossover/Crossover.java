@@ -1,21 +1,18 @@
 package pl.kat.ue.tspgenetic.operators.crossover;
 
-import lombok.Setter;
 import pl.kat.ue.tspgenetic.Individual;
 import pl.kat.ue.tspgenetic.Population;
+import pl.kat.ue.tspgenetic.operators.GeneticOperator;
 import pl.kat.ue.tspgenetic.utils.Pair;
 import pl.kat.ue.tspgenetic.utils.Random;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-public abstract class Crossover {
+public abstract class Crossover implements GeneticOperator {
 
     private final double crossoverProbability;
-    @Setter
-    private Integer noCrossingEpoch;
     protected int[] crossed1;
     protected int[] crossed2;
     protected int[] genotype1;
@@ -25,12 +22,6 @@ public abstract class Crossover {
     public Crossover(double crossoverProbability) {
         this.crossoverProbability = crossoverProbability;
     }
-
-    public Crossover(double crossoverProbability, int noCrossingEpoch) {
-        this(crossoverProbability);
-        this.noCrossingEpoch = noCrossingEpoch;
-    }
-
 
     public abstract Pair<Individual> crossPair(Pair<Individual> pair);
 
@@ -49,18 +40,18 @@ public abstract class Crossover {
                 .collect(Collectors.toList());
     }
 
-    public void cross(Population evolvingPopulation, int epoch) {
+    public void cross(Population evolvingPopulation) {
         Population recombinedPopulation = new Population();
 
-        while (shouldRecombine(evolvingPopulation, epoch)) {
+        while (shouldRecombine(evolvingPopulation)) {
             Pair<Individual> pair = selectRandomlyPair(evolvingPopulation);
             recombinedPopulation.add(shouldCross() ? crossPair(pair) : pair);
         }
         evolvingPopulation.addAll(recombinedPopulation);
     }
 
-    private boolean shouldRecombine(Population population, int epoch) {
-        return population.size() > 1 && (Objects.isNull(noCrossingEpoch) || epoch < noCrossingEpoch);
+    private boolean shouldRecombine(Population population) {
+        return population.size() > 1;
     }
 
     private Pair<Individual> selectRandomlyPair(Population population) {

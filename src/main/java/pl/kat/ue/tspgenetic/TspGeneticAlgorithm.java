@@ -10,33 +10,31 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NavigableMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-public class GeneticAlgorithm {
+public class TspGeneticAlgorithm {
 
     private final int populationSize;
     private final int[][] dataSet;
     private final int epochs;
     private final Population population;
-    private final Crossover crossover;
+    private final NavigableMap<Integer, Selection> selections;
+    private final NavigableMap<Integer, Crossover> crossovers;
     private final NavigableMap<Integer, Mutation> mutations;
     private final Succession succession;
-    private final Selection selection;
     @Getter
     private final Results results;
 
-    public static GeneticAlgorithmBuilder builder() {
-        return new GeneticAlgorithmBuilder();
+    public static TspGeneticAlgorithmBuilder builder() {
+        return new TspGeneticAlgorithmBuilder();
     }
 
-    GeneticAlgorithm(GeneticAlgorithmBuilder builder) {
+    TspGeneticAlgorithm(TspGeneticAlgorithmBuilder builder) {
         this.populationSize = builder.populationSize;
         this.dataSet = builder.dataSet;
         this.epochs = builder.epochs;
         this.mutations = builder.mutations;
-        this.selection = builder.selection;
-        this.crossover = builder.crossover;
+        this.selections = builder.selections;
+        this.crossovers = builder.crossovers;
         this.succession = builder.succession;
         this.population = generateRandomlyPopulation();
         this.results = new Results();
@@ -44,14 +42,18 @@ public class GeneticAlgorithm {
     }
 
     private Population generateRandomlyPopulation() {
-        return Stream.generate(() -> new Individual(dataSet.length))
-                .limit(populationSize)
-                .peek(this::assess)
-                .collect(Collectors.toCollection(Population::new));
+        var population = new Population();
+        for (int i = 0; i < populationSize; i++) {
+            var individual = new Individual(dataSet.length);
+            assess(individual);
+            population.add(individual);
+        }
+        return population;
     }
 
     private Individual getBest(Population population) {
-        return population.stream().sorted(Comparator.naturalOrder())
+        return population.stream()
+                .sorted(Comparator.naturalOrder())
                 .findFirst()
                 .get();
     }
@@ -67,10 +69,12 @@ public class GeneticAlgorithm {
     }
 
     private void assesPopulation(Population population) {
-        population.stream()
-                .filter(Individual::isNotAssessed)
-                .peek(this::assess)
-                .forEach(this::updateBest);
+        for (Individual individual : population) {
+            if (individual.isNotAssessed()) {
+                assess(individual);
+                updateBest(individual);
+            }
+        }
     }
 
     private void updateBest(Individual individual) {
@@ -79,23 +83,29 @@ public class GeneticAlgorithm {
         results.best = best;
     }
 
-    public void perform() {
-        for (int epoch = 1; epoch <= epochs; epoch++) {
-
-            var evolutingPopulation = selection.select(population);
-            crossover.cross(evolutingPopulation, epoch);
+    public Results perform() {
+        for (int epoch = 0; epoch < epochs; epoch++) {
+            var evolutingPopulation = selection(epoch).select(population);
+            crossover(epoch).cross(evolutingPopulation);
             mutation(epoch).mutate(evolutingPopulation);
             assesPopulation(evolutingPopulation);
             succession.determineNext(population, evolutingPopulation);
-
-            if (epoch % 1000 == 0) {
-                System.out.println(results.best);
-            }
         }
+        return results;
     }
 
     private Mutation mutation(int epoch) {
         return mutations.ceilingEntry(epoch).getValue();
+    }
+
+
+    private Selection selection(int epoch) {
+        return selections.ceilingEntry(epoch).getValue();
+    }
+
+
+    private Crossover crossover(int epoch) {
+        return crossovers.ceilingEntry(epoch).getValue();
     }
 
     @Getter
@@ -104,12 +114,5 @@ public class GeneticAlgorithm {
         private final List<Integer> bestInts = new ArrayList<>();
         private Individual best;
 
-        private void addNext(int best) {
-            bestInts.add(best);
-        }
-
-        private void setBest(Individual best) {
-            this.best = best;
-        }
     }
 }

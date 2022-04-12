@@ -4,10 +4,7 @@ import pl.kat.ue.tspgenetic.Individual;
 import pl.kat.ue.tspgenetic.Population;
 import pl.kat.ue.tspgenetic.utils.WeightedCollection;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-public class RouletteWheelSelection implements Selection {
+public class RouletteWheelSelection extends Selection {
 
     private WeightedCollection<Individual> weightedIndividuals;
     private int selectionSize;
@@ -22,22 +19,27 @@ public class RouletteWheelSelection implements Selection {
     private void fillCollectionWithWeightedIndividuals(Population population) {
         weightedIndividuals = new WeightedCollection<>();
         int max = getAssessmentMax(population);
-        population.forEach(individual -> {
+        for (Individual individual : population) {
             double weight = max + 1.0 - individual.getAssessment();
             weightedIndividuals.add(weight, individual);
-        });
+        }
     }
 
     private int getAssessmentMax(Population population) {
-        return population.stream()
-                .mapToInt(Individual::getAssessment)
-                .max().orElse(0);
+        int max = population.get(0).getAssessment();
+        for (Individual individual : population) {
+            if (individual.getAssessment() > max) {
+                max = individual.getAssessment();
+            }
+        }
+        return max;
     }
 
     private Population randomlySelectIndividuals() {
-        return Stream.generate(weightedIndividuals::next)
-                .limit(selectionSize)
-                .map(Individual::copy)
-                .collect(Collectors.toCollection(Population::new));
+        Population population = new Population();
+        while (population.size() != selectionSize) {
+            population.add(weightedIndividuals.next().copy());
+        }
+        return population;
     }
 }

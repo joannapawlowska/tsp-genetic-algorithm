@@ -15,10 +15,6 @@ public class CycleCrossover extends Crossover {
         super(crossoverProbability);
     }
 
-    public CycleCrossover(double crossoverProbability, int noCrossingEpoch) {
-        super(crossoverProbability, noCrossingEpoch);
-    }
-
     @Override
     public Pair<Individual> crossPair(Pair<Individual> pair) {
         setCurrentPairData(pair);

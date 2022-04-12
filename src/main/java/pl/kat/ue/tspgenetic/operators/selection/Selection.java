@@ -1,9 +1,10 @@
 package pl.kat.ue.tspgenetic.operators.selection;
 
 import pl.kat.ue.tspgenetic.Population;
+import pl.kat.ue.tspgenetic.operators.GeneticOperator;
 
-public interface Selection {
+public abstract class Selection implements GeneticOperator {
 
-    Population select(Population population);
+    public abstract Population select(Population population);
 
 }
